@@ -23,64 +23,8 @@ function getConfig() {
   
     config.setDateRangeRequired(true);
     config.setIsSteppedConfig(false);
-    return config.build();
-  
+    return config.build(); 
 }
-/* 
-function getConfig(request) {
-  var cc = DataStudioApp.createCommunityConnector();
-  var config = cc.getConfig();
-
-  config
-      .newTextInput()
-      .setId('exampleTextInput')
-      .setName('Single line text')
-      .setHelpText('Helper text for single line text')
-      .setPlaceholder('Lorem Ipsum');
-
-  config
-      .newTextArea()
-      .setId('exampleTextArea')
-      .setName('Text area')
-      .setHelpText('Helper text for text area')
-      .setPlaceholder('Lorem Ipsum');
-
-  config
-      .newSelectSingle()
-      .setId('exampleSelectSingle')
-      .setName('Select single')
-      .setHelpText('Helper text for select single')
-      .setAllowOverride(true)
-      .addOption(config.newOptionBuilder().setLabel('Lorum foo').setValue('lorem'))
-      .addOption(config.newOptionBuilder().setLabel('Ipsum Bar').setValue('ipsum'))
-      .addOption(config.newOptionBuilder().setLabel('Sit').setValue('amet'));
-
-  config
-      .newSelectMultiple()
-      .setId('exampleSelectMultiple')
-      .setName('Select multiple')
-      .setHelpText('Helper text for select multiple')
-      .addOption(config.newOptionBuilder().setLabel('Lorum foo').setValue('lorem'))
-      .addOption(config.newOptionBuilder().setLabel('Ipsum Bar').setValue('ipsum'))
-      .addOption(config.newOptionBuilder().setLabel('Sit').setValue('amet'));
-
-  config
-      .newCheckbox()
-      .setId('exampleCheckbox')
-      .setName('This is a checkbox')
-      .setHelpText('Helper text for checkbox');
-
-  config
-      .newInfo()
-      .setId('exampleInfo')
-      .setText('Examle instructions text used in Info')
-
-  config.setDateRangeRequired(true);
-  config.setIsSteppedConfig(false);
-
-  return config.build();
-} */
-
 
 // https://developers.google.com/datastudio/connector/reference#isadminuser
 function isAdminUser() {

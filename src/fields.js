@@ -3,39 +3,39 @@ const getSchema = (request) => {
   var fields = cc.getFields();
   var types = cc.FieldType;
 
-  var product = fields
+  fields
     .newDimension()
     .setId("Product")
     .setName("Product")
     .setDescription("The product of the service alerted")
     .setType(types.TEXT)
-    .setGroup("ProductGroup");
+    //.setGroup("ProductGroup");
 
-  var source = fields
+  fields
     .newDimension()
     .setId("Source")
     .setName("Source")
     .setDescription("The Source of the service alerted")
     .setType(types.TEXT)
-    .setGroup("SourceGroup");
+    //.setGroup("SourceGroup");
 
-  var service = fields
+  fields
     .newDimension()
     .setId("Service")
     .setName("Service")
     .setDescription("The Service of the service alerted")
     .setType(types.TEXT)
-    .setGroup("ServiceGroup");
+    //.setGroup("ServiceGroup");
 
-  var alert = fields
+  fields
     .newDimension()
     .setId("Alert")
     .setName("Alert")
     .setDescription("The Alert of the service alerted")
     .setType(types.TEXT)
-    .setGroup("AlertGroup");
+    //.setGroup("AlertGroup");
 
-  var value_alert_numeric = fields
+  fields
     .newMetric()
     .setId("value_alert_numeric")
     .setName("Value")
@@ -43,30 +43,32 @@ const getSchema = (request) => {
     .setType(types.NUMBER);
   //.setIsHidden(true);
 
-  var value_alert_percent = fields
+  fields
     .newMetric()
     .setId("value_alert_percent")
     .setName("Value %")
     .setDescription("The current value of the alert %")
     .setType(types.PERCENT);
 
-  var status = fields
+  fields
     .newMetric()
     .setId("status")
     .setName("Status")
     .setDescription("The Status of the alert")
     .setType(types.TEXT);
 
-  var alert_date = fields
+  fields
     .newDimension()
     .setId("alert_date")
     .setName("Alert Date")
     .setDescription("The date of the alert")
     .setType(types.YEAR_MONTH_DAY_SECOND)
-    .setGroup("AlertDateGroup");
+    //.setGroup("AlertDateGroup");
 
-  fields.setDefaultMetric(value_alert_numeric.getId());
-  fields.setDefaultDimension(service.getId());
+  fields.setDefaultMetric("value_alert_numeric");
+  fields.setDefaultDimension("Service");
+  
 
-  return { schema: fields.build(), fields };
+  return { schema: fields.build(), fields }
+  //return fields;
 };

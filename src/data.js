@@ -3,15 +3,18 @@
 // https://developers.google.com/datastudio/connector/reference#getdata
 const getData = (request) => {
   try {
-    var requestedFields = getSchema().fields.forIds(
+    const Fields = getSchema().fields;
+    const source = request.configParams.sourceSelected;
+
+    var requestedFields = Fields.forIds(
       request.fields.map(function (field) {
         return field.name;
       })
     );
 
     var url = [
-      "http://e3d5-181-204-6-82.ngrok.io/getter/",
-      request.configParams.sourceSelected,
+      "http://be25-173-44-55-77.ngrok.io/getter/",
+      source,
       "?dataRange=",
       request.dateRange.startDate,
       ":",
@@ -20,16 +23,14 @@ const getData = (request) => {
     ].join("");
 
     const response = JSON.parse(UrlFetchApp.fetch(url));
-    //console.log("Response from API Great", response);
 
     const normalizedResponse = normalizeResponse(request, response);
 
-    const data = getFormattedData(normalizedResponse, requestedFields);
-    console.log("🚀 ~ file: data.js ~ line 28 ~ getData ~ data", data);
+    const data = getFormattedData(normalizedResponse, requestedFields, source);
 
     return {
-      schema: {}, //requestedFields.build(),
-      rows: response,
+      schema: requestedFields.build(),
+      rows: data,
     };
   } catch (e) {
     console.log("Hay error:", e);
@@ -62,23 +63,13 @@ const normalizeResponse = (request, response) => {
   return mapped_response;
 };
 
-/* { 
-  message: 'Llego a buscar datos',
-  data: 
-   { Item: 
-      { Service: 'scraping',
-        Id: '2',
-        Info: [Object],
-        Source: 'MONGO_ATLAS' } } 
-} */
-
 function getFormattedData(response, requestedFields) {
   var data = [];
   try {
     Object.keys(response).map(function (sourceFromApi) {
       var source = response[sourceFromApi];
       var formattedData = source.map((alert) => {
-        return formatData(requestedFields, alert);
+        return formatData(requestedFields, alert, source);
       });
       data = data.concat(formattedData);
     });
@@ -95,28 +86,52 @@ function isAdminUser() {
   return false;
 }
 
-const formatData = (requestedFields, alert) => {
+const formatData = (requestedFields, alert, source) => {
   var row = requestedFields.asArray().map(function (requestedField) {
-    switch (requestedField.getId()) {
-      case "Service":
-        return alert.Service;
-      case "value_alert_numeric":
-        return alert.Info.currentValue.number;
-      case "Source":
-        return alert.Source;
-      case "Product":
-        return "EVERCHECK";
-      case "Alert":
-        return alert.Info.metricName;
-      case "status":
-        return alert.Info.status;
-      case "alert_date":
-        return alert.Info.created;
-      case "value_alert_percent":
-        return alert.Info.currentValue.number;
-      default:
-        return "";
+    if(source === "MONGO_ATLAS"){
+      switch (requestedField.getId()) {
+        case "Service":
+          return alert.Service;
+        case "value_alert_numeric":
+          return alert.Info.currentValue.number;
+        case "Source":
+          return alert.Source;
+        case "Product":
+          return "EVERCHECK";
+        case "Alert":
+          return alert.Info.metricName;
+        case "status":
+          return alert.Info.status;
+        case "alert_date":
+          return alert.Info.created;
+        case "value_alert_percent":
+          return alert.Info.currentValue.number;
+        default:
+          return "";
+      }
+    }else{
+      switch (requestedField.getId()) {
+        case "Service":
+          return alert.Service;
+        case "value_alert_numeric":
+          return 0;// alert.INCIDENT_REASON;
+        case "Source":
+          return alert.Source;
+        case "Product":
+          return "EVERCHECK";
+        case "Alert":
+          return alert.INCIDENT_REASON;
+        case "status":
+          return alert.Info.STATUS;
+        case "alert_date":
+          return alert.Info.INCIDENT_TIME_ISO;
+        case "value_alert_percent":
+          return 0;
+        default:
+          return "";
+      }
     }
+    
   });
 
   return { values: row };
